@@ -34,7 +34,7 @@ function ChatDetails() {
     setIsLoading(true);
     try {
       await delay(2000);
-      const response = await fetch("http://localhost:8080/api/chat", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
