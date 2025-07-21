@@ -5,7 +5,14 @@ const main = require("./app");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+
+// CORS: Allow Netlify frontend
+app.use(cors({
+  origin: 'https://hopebott.netlify.app',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 app.options("*", cors());
 app.use("/api", main);
-app.listen(8080, () => console.log("listening to port: 8080"));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
