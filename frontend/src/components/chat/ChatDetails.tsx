@@ -46,19 +46,33 @@ function ChatDetails() {
         await delay(1000);
         return handleChatApiRequest(question);
       }
+  
       const result = await response.json();
+     
+       if (!response.ok) {
+       
+      throw new Error(result?.error || "Something went wrong");
+    }
       console.log("result......", result);
       setAnswers((prev) => [...prev, { question, response: result.response }]);
     } catch (error) {
-      setError(true);
-      console.log("API error:", error);
-  if (error instanceof Error) {
-    setErrorMessage(error.message);
-  } else if (typeof error === "object" && error !== null && "error" in error) {
-    setErrorMessage((error as any).error);
-  } else {
-    setErrorMessage("An unknown error occurred");
-  }
+       console.log("API error:", error);
+  setError(true);
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" && error !== null && "error" in error
+        ? (error as any).error
+        : "An unknown error occurred";
+
+  setErrorMessage(message);
+
+  // Add error to chat like a normal response (centered or styled differently)
+  setAnswers((prev) => [
+    ...prev,
+    { question, response: message },
+  ]);
     } finally {
       setIsLoading(false);
     }
@@ -157,7 +171,7 @@ function ChatDetails() {
               </div>
             </>
           )}
-          {error ? (
+          {/* {error ? (
             <div className="helpContainer">
               <div style={{ textAlign: "center",color:"black" }}>
                 <Typography style={{ textAlign: "center" }}>
@@ -165,7 +179,7 @@ function ChatDetails() {
                 </Typography>
               </div>
             </div>
-          ) : null}
+          ) : null} */}
           <div ref={chatMessageStreamEnd} />
         </div>
       )}
