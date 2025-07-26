@@ -57,16 +57,21 @@ const fetchAIResponse = async (message) => {
 };
 
 router.post("/chat", async (req, res) => {
-  // console.log("req", req);
   const message = req.body.question;
   if (!message) {
     return res
       .status(400)
       .json({ error: "Missing 'question' in request body" });
   }
-  const response = await fetchAIResponse(message);
-  res.json({ response });
-  // console.log("User:", userPrompt);
-  console.log("AI:", response);
+
+  try {
+    const response = await fetchAIResponse(message);
+    res.json({ response });
+    console.log("AI:", response);
+  } catch (error) {
+    console.error("AI API error:", error?.message || error);
+    res.status(500).json({ error: "AI service failed or quota exceeded" });
+  }
 });
+
 module.exports = router;

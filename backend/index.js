@@ -5,13 +5,25 @@ const main = require("./app");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+const allowedOrigins = [
+  "http://localhost:5173",         // local dev
+  "https://hopebott.netlify.app"  // deployed frontend
+];
 
-// CORS: Allow Netlify frontend
 app.use(cors({
-  origin: 'https://hopebott.netlify.app',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
   methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
   credentials: true
 }));
+
+
 app.options("*", cors());
 app.use("/api", main);
 const PORT = process.env.PORT || 8080;
