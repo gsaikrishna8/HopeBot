@@ -94,6 +94,7 @@ function ChatDetails() {
     // !lastQuestionRef.current;
     setAnswers([]);
   };
+  console.log("eror", errorMessage)
   return (
     <div className="chatContainer">
       {!error && !help && !lastQuestionRef.current ? (
