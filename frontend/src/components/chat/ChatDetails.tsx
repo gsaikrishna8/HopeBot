@@ -50,11 +50,15 @@ function ChatDetails() {
       console.log("result......", result);
       setAnswers((prev) => [...prev, { question, response: result.response }]);
     } catch (error) {
-      console.log(error);
       setError(true);
-      setErrorMessage(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      );
+      console.log("API error:", error);
+  if (error instanceof Error) {
+    setErrorMessage(error.message);
+  } else if (typeof error === "object" && error !== null && "error" in error) {
+    setErrorMessage((error as any).error);
+  } else {
+    setErrorMessage("An unknown error occurred");
+  }
     } finally {
       setIsLoading(false);
     }
